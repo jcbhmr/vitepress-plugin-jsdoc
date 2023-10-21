@@ -1,9 +1,0 @@
-{
-    "prettier": true,
-    "space": 2,
-    "rules": {
-      "n/prefer-global/process": "off",
-      "n/file-extension-in-import": "off"
-      
-    }
-  }
