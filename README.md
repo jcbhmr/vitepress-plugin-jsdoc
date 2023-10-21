@@ -1,214 +1,152 @@
-<div align="center">
+# JSDoc plugin for VitePress
 
-[![vitepress-jsdoc logo](https://blakmatrix.github.io/vitepress-jsdoc/vitepress_jsdoc_logo.svg "A tree as great as a man's embrace springs from a small shoot
-A terrace nine stories high begins with a pile of earth
-A journey of a thousand miles starts under one's feet. -Lao Tzu")](https://blakmatrix.github.io/vitepress-jsdoc/)
+🧙‍♂️ Automagic JSDoc integration for your VitePress site
 
-[![npm][npm]][npm-url]
+<p align=center>
+  <img src="https://i.imgur.com/HuNHhJX.png">
+</p>
 
-[![node][node]][node-url]
-[![licenses][licenses]][licenses-url]
-[![PR's welcome][prs]][prs-url]
-[![XO code style][xo]][xo-url]
+<p align=center>
+  <a href="https://stackblitz.com/github/jcbhmr/vitepress-plugin-jsdoc"><img valign=middle src="https://developer.stackblitz.com/img/open_in_stackblitz_small.svg"></a>
+</p>
 
+🤩 Works great with [jsdoc-plugin-typescript] \
+👨‍🏭 Comes with premade `js` and `ts` presets \
+🌐 Adds a bunch of `/api/*` pages to your VitePress site
 
-  <a href="https://docs.github.com/en/code-security/dependabot/dependabot-security-updates/about-dependabot-security-updates#about-compatibility-scores">
-    <img src="https://api.dependabot.com/badges/compatibility_score?dependency-name=vitepress-jsdoc&package-manager=npm_and_yarn&previous-version=2.20&new-version=3.0.1">
-  </a>
-	<a href="https://npmcharts.com/compare/vitepress-jsdoc?minimal=true">
-		<img src="https://img.shields.io/npm/dm/vitepress-jsdoc.svg">
-	</a>
-	<a href="https://packagephobia.com/result?p=vitepress-jsdoc">
-		<img src="https://packagephobia.com/badge?p=vitepress-jsdoc" alt="install size">
-	</a>
-	<a href="https://opencollective.com/vitepress-jsdoc#backer">
-		<img src="https://opencollective.com/vitepress-jsdoc/backers/badge.svg">
-	</a>
-	<a href="https://opencollective.com/vitepress-jsdoc#sponsors">
-		<img src="https://opencollective.com/vitepress-jsdoc/sponsors/badge.svg">
-	</a>
-	<a href="https://github.com/blakmatrix/vitepress-jsdoc/graphs/contributors">
-		<img src="https://img.shields.io/github/contributors/blakmatrix/vitepress-jsdoc.svg">
-	</a>
-	<a href="https://github.com/blakmatrix/vitepress-jsdoc/discussions">
-		<img src="https://img.shields.io/github/discussions/blakmatrix/vitepress-jsdoc">
-	</a>
-  <h1>vitepress-jsdoc</h1>
-  <p><i>Code More, Document Faster: The Ultimate Vitepress Integration.</i></p>
-  <p>
-    <code>vitepress-jsdoc</code> is the definitive bridge between Vitepress and JSDoc-style commented codebases. Crafted for developers seeking a hassle-free documentation experience, it excels in swiftly generating comprehensive docs from your annotations. Beyond just documentation, it's your key to unlocking the full potential of Vitepress, seamlessly integrating your code insights into beautifully rendered pages.
-  </p>
+<details><summary><b>👀 Screenshots</b></summary>
+<br>
+<div align=center>
+  <img src="https://picsum.photos/550/400">
+  <img src="https://picsum.photos/300/400">
+  <img src="https://picsum.photos/500/340">
 </div>
-
-**Read the full documentation at [blakmatrix.github.io/vitepress-jsdoc/](https://blakmatrix.github.io/vitepress-jsdoc/)**
-
+<br>
+</details>
 
 ## Install
 
-```shell
-npm install -D vitepress-jsdoc
+![npm](https://img.shields.io/static/v1?style=for-the-badge&message=npm&color=CB3837&logo=npm&logoColor=FFFFFF&label=)
+![pnpm](https://img.shields.io/static/v1?style=for-the-badge&message=pnpm&color=222222&logo=pnpm&logoColor=F69220&label=)
+![Yarn](https://img.shields.io/static/v1?style=for-the-badge&message=Yarn&color=2C8EBB&logo=Yarn&logoColor=FFFFFF&label=)
+![Bun](https://img.shields.io/static/v1?style=for-the-badge&message=Bun&color=000000&logo=Bun&logoColor=FFFFFF&label=)
+
+```sh
+npm install -D vitepress-plugin-jsdoc
 ```
 
-## Primary Usage: Command Line Tool
+## Usage
 
-The main usage of `vitepress-jsdoc` is as a command line tool. Here's a generic command line example:
+![VitePress](https://img.shields.io/static/v1?style=for-the-badge&message=VitePress&color=646CFF&logo=Vite&logoColor=FFFFFF&label=)
+![Vue.js](https://img.shields.io/static/v1?style=for-the-badge&message=Vue.js&color=222222&logo=Vue.js&logoColor=4FC08D&label=)
 
-```shell
-    npx vitepress-jsdoc --source path/to/src --dist ./docs --folder code --title API
+```js
+// .vitepress/config.ts
+import { defineConfig } from 'vitepress'
+import jsdoc from "vitepress-plugin-jsdoc"
+
+// https://vitepress.dev/reference/site-config
+export default defineConfig({
+  vite: {
+    plugins: [jsdoc()]
+  },
+
+  // ...
+})
 ```
 
-*Note: You will probably want to grab the handlbar partial and helpers from this project*
+[![](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/jcbhmr/vitepress-plugin-jsdoc)
 
-### Prebuild and Build Steps
+### Options
 
-To ensure your documentation is up-to-date, consider adding a prebuild step using the following command:
+You can specify configuration options via `jsdoc(options)` where `options` is an object with these properties. They are all **optional** so you can just use `jsdoc()` if you like the defaults.
 
-```shell
-vitepress-jsdoc --source path/to/src --dist ./docs --folder code  --readme path/to/README.md --exclude="**/*.json,**/*.hbs,**/*.d.ts,**/*.map,**/interfaces.*" --partials=path/to/handlebars/partials/*.hbs --helpers=path/to/handlebars/helpers/*.hbs
+- **`include`:** List (or single item) of glob strings (ex: `src/**.js`) or `file:` URL objects (ex: `new URL("./", import.meta.url)`). These files will be passed to the `jsdoc` CLI to generate the output JSON which will then be used to generate the documentation pages. Defaults to `./**`. Note that this is **different** from `conf.source.includePattern`.
+
+- **`exclude`:** List (or single item) of glob strings (ex: `docs/**`) or `file:` URL objects (ex: `new URL("./", import.meta.url)`) to **exclude** from the `include` list before passing to the `jsdoc` CLI. By default it is set to `test/**`. Note that this is **different** from `conf.source.excludePattern`. The VitePress root folder, `node_modules`, `.cache`, and `.srcDir` will always be excluded.
+
+- **`base`:** Base URL (relative to the site's existing `base` URL) like `/api/` or `/jsdoc/`. Slashes are auto-normalized; `api`, `/api`, `api/`, and `/api/` all mean the same thing. This is the prefix that will be used to serve the API docs under. By default this is `/api/`.
+
+- **`conf`:** JSDoc `conf.json` file path (string or `file:` URL) or a JSON-serializable object to write as `conf.json` and pass to the `jsdoc` CLI. Can also be `null` or `undefined` in which case no `--configure` flag will be passed to `jsdoc`. Defaults to `undefined`. **You will need to specify this option if you are using JSDoc plugins.**
+
+- **`sidebar`:** A boolean; `true` by default. Set this to `false` to disable injecting a `sidebar` config for the `/api/*` routes.
+
+Here's an example of using this plugin with [jsdoc-plugin-typescript] to document TypeScript files in `src/`:
+
+```js
+// .vitepress/config.ts
+import { defineConfig } from 'vitepress'
+import jsdoc from "vitepress-plugin-jsdoc"
+
+// https://vitepress.dev/reference/site-config
+export default defineConfig({
+  vite: {
+    plugins: [jsdoc({
+      include: "src",
+      conf: {
+        source: {
+          includePattern: ".+\\.(c|m)?(j|t)s(doc|x)?$",
+        },
+        sourceType: "module",
+        plugins: ["jsdoc-plugin-typescript"],
+        typescript: {
+          moduleRoot: "."
+        }
+      }
+    })]
+  },
+
+  // ...
+})
 ```
 
-After the prebuild, you can build your documentation with:
+[![](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/jcbhmr/vitepress-plugin-jsdoc)
 
-```shell
-vitepress build docs
-```
+### Customization
 
-For development purposes, you can utilize `npx concurrently` to run both the Vitepress development server and the watch mode of `vitepress-jsdoc`:
+Beyond the options, you can override the `<VPJSD*>` components if you want to tweak something:
 
-```shell
-npx concurrently "vitepress dev docs" "vitepress-jsdoc --source path/to/src ... -watch"
-```
+```js
+// .vitepress/theme/index.ts
+// https://vitepress.dev/guide/custom-theme
+import { h } from 'vue'
+import Theme from 'vitepress/theme'
+import './style.css'
 
-Here's a partial package.json script to illustrate:
-
-```json
-{
-  "scripts": {
-    "prebuild": "vitepress-jsdoc --source path/to/dist/esm --dist ./docs --folder code  --readme path/to/README.md --exclude=\"**/*.json,**/*.hbs,**/*.d.ts,**/*.map,**/interfaces.*\" --partials=path/to/handlebars/partials/*.hbs --helpers=path/to/handlebars/helpers/*.hbs",
-    "build": "vitepress build docs",
-    // OR (using vitepress' default commands 
-    // - you might take `prebuild` above and rewrite it to `docs:preview`)
-    "docs:build": "npm run prebuild && vitepress build docs",
-    "docs:dev": "npx concurrently \"vitepress dev docs\" \"vitepress-jsdoc --source path/to/src ... -watch\""
+export default {
+  extends: Theme,
+  Layout: () => {
+    return h(Theme.Layout, null, {
+      // https://vitepress.dev/guide/extending-default-theme#layout-slots
+    })
+  },
+  enhanceApp({ app, router, siteData }) {
+    // ...
+    app.component("VPJSDIndex", MyComponent1)
+    app.component("VPJSDParamList", MyComponent2)
   }
 }
 ```
 
-This package.json script provides both the prebuild and build steps combined in the docs:build command using the && approach. The docs:dev command runs both the Vitepress development server and the watch mode of vitepress-jsdoc concurrently.
+[![](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/jcbhmr/vitepress-plugin-jsdoc)
 
-## Plugin Mode (Beta)
+## How it works
 
-While `vitepress-jsdoc` can be integrated as a plugin into Vitepress, please note that this mode is currently in beta. During development, the module will function as expected. However, due to certain technical challenges in integrating with the default Vitepress transforms for markdown files, there might be limitations in this mode.
+1. We copy our internal `pages/` folder (part of this package) to the `.cache/jsdoc/` folder in the VitePress source tree. We can't use `.vitepress/cache/*` because it's excluded from the page indexing step and/or it might not be in the `.srcDir` which is where pages are indexed from.
+2. `jsdoc` is run to generate a `doc.json` with all the data in it. We are using [jsdoc-json] to do this.
+3. We use Vite's `configure()` hook to:
+    1. Rewrite all `/api/:path` routes to our `.gitignore`-ed `.cache/jsdoc/:path` pages
+    2. Create an import rewrite for `@doc.json` to the `.cache/jsdoc/doc.json` JSDoc JSON output
+    3. Create an import rewrite to wrap the `vitepress/theme` with our additional `.enhanceApp()` custom `<VPJSD*>` components
+    4. Inject a `sidebar` configuration for the `/api/*` routes to use that outlines all pages
+4. We use the `doc.json` to populate those routes with content
 
-For integration into Vitepress, the module mode is recommended:
+## Development
 
-```typescript
-// Example Vitepress Configuration
-import { defineConfig } from "vitepress";
-import VitpressJsdocPlugin from "vitepress-jsdoc";
+![VitePress](https://img.shields.io/static/v1?style=for-the-badge&message=VitePress&color=646CFF&logo=Vite&logoColor=FFFFFF&label=)
+![Vue.js](https://img.shields.io/static/v1?style=for-the-badge&message=Vue.js&color=222222&logo=Vue.js&logoColor=4FC08D&label=)
 
-export default defineConfig({
-  vite: {
-    plugins: [
-      VitpressJsdocPlugin({
-        folder: "code",
-        source: "./src",
-        dist: "./docs",
-        title: "API",
-        partials: ["./partials/*.hbs"],
-        helpers: ["./helpers/*.js"],
-        readme: "./README.md",
-        exclude: "**/*.json,**/*.d.ts,**/*.map",
-      }),
-    ],
-  },
-});
+[![](https://developer.stackblitz.com/img/open_in_codeflow.svg)](https://pr.new/https://github.com/jcbhmr/vitepress-plugin-jsdoc)
 
-```
-
-## Live Example
-
-This entire project serves as a live example. You can view it [here](https://blakmatrix.github.io/vitepress-jsdoc/) or browse the files directly on [GitHub](https://github.com/blakmatrix/vitepress-jsdoc).
-
-## Vitepress Configuration
-
-For a quick start with Vitepress:
-
-1. Initialize Vitepress in your project with `npx vitepress init`.
-2. Update your `config.mts` file as shown below.
-3. Run the development server with `npm run docs:dev`.
-4. Build for production with `npm run docs:build` (Note: the watch plugin will not run in this mode).
-
-## Sidebar Configuration
-
-While `vitepress-jsdoc` is agnostic to sidebars, it's recommended to use `vitepress-sidebar` for a more enhanced experience. Configure your `vitepress` `config.mts` file as follows:
-
-```ts
-import { defineConfig } from "vitepress";
-import { generateSidebar } from "vitepress-sidebar";
-
-const getSideBar = (): any => {
-  const generatedSidebar = generateSidebar([
-    {
-      documentRootPath: "docs",
-      useTitleFromFileHeading: true,
-      hyphenToSpace: true,
-      keepMarkdownSyntaxFromTitle: true,
-    },
-  ]);
-  return generatedSidebar ?? [];
-};
-
-export default defineConfig({
-  title: "<your package title>",
-  description: "<your package description>",
-  themeConfig: {
-    nav: [
-      { text: "Home", link: "/" },
-      { text: "API", link: "/code/README" },
-    ],
-    sidebar: getSideBar(),
-    outline: { level: [2, 6] },
-  },
-});
-```
-
-## Plugin/Command Options
-
-These are plugin/command options:
-
-| Option            | Description |
-|-------------------|-------------|
-| `folder`          | Folder name |
-| `source`          | Source directory |
-| `dist`            | Destination directory |
-| `title`           | Title of your documentation |
-| `partials`        | Path to partial templates for JSDoc config|
-| `helpers`         | Path to helper scripts for JSDoc config |
-| `readme`          | Path to custom README |
-| `exclude`         | Pattern to exclude files/folders |
-
-## Contributions
-
-We welcome and appreciate contributions from the community. If you have improvements, bug fixes, or other suggestions, please submit a pull request.
-
-If you find value in this project and wish to show your support in other ways, consider sponsoring us. Your sponsorship will help ensure the continued development and improvement of this project.
-
-[Sponsor this project](https://github.com/blakmatrix/vitepress-jsdoc?sponsor=1)
-
-
-## License
-
-MIT.
-
-
-[npm]: https://img.shields.io/npm/v/vitepress-jsdoc.svg
-[npm-url]: https://npmjs.com/package/vitepress-jsdoc
-[node]: https://img.shields.io/node/v/vitepress-jsdoc.svg
-[node-url]: https://nodejs.org
-[prs]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg
-[prs-url]: https://github.com/blakmatrix/vitepress-jsdoc/blob/master/CONTRIBUTING.md
-[licenses-url]: https://app.fossa.io/projects/git%2Bhttps%3A%2F%2Fgithub.com%2Fblakmatrix%2Fvitepress-jsdoc?ref=badge_shield
-[licenses]: https://app.fossa.io/api/projects/git%2Bhttps%3A%2F%2Fgithub.com%2Fblakmatrix%2Fvitepress-jsdoc.svg?type=shield
-[xo]: https://shields.io/badge/code_style-5ed9c7?logo=xo&labelColor=gray
-[xo-url]: https://github.com/xojs/xo
+[jsdoc-json]: https://github.com/tschaub/jsdoc-json#readme
+[jsdoc-plugin-typescript]: https://github.com/openlayers/jsdoc-plugin-typescript#readme

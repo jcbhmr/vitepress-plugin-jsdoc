@@ -89,8 +89,8 @@ function jsdoc(options: JSDocOptions): Plugin {
 
       Object.assign(c.vitepress.rewrites.map, myRewrites.map)
       Object.assign(c.vitepress.rewrites.inv, myRewrites.inv)
-      console.log(c.resolve.alias)
       ;(c.resolve.alias as Alias[]).unshift({ find: "@theme/index", replacement: "/home/jcbhmr/vitepress-plugin-jsdoc/src/theme.js" })
+      console.log(c.resolve.alias)
     },
     async buildStart(options) {
       for (const f of files) {
