@@ -2,4 +2,6 @@
 import jsdoc from ".vitepress/jsdoc"
 </script>
 
-<pre>{{ jsdoc }}</pre>
+<ul>
+  <li v-for="x in jsdoc.docs"><a :href="x.longname + '.html'">{{ x.name }}</a></li>
+</ul>

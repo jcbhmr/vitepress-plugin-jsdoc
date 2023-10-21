@@ -57,7 +57,7 @@ function jsdoc(options: JSDocOptions): Plugin {
         destination: join(myCacheDir, "doc.json"),
         template: dirname(createRequire(import.meta.url).resolve("jsdoc-json/publish.js"))
       });
-      (c.resolve.alias as Alias[]).push({ find: ".vitepress/jsdoc", replacement: join(myCacheDir, "doc.json") })
+      (c.resolve.alias as Alias[]).unshift({ find: ".vitepress/jsdoc", replacement: join(myCacheDir, "doc.json") })
 
       const myConfig = await resolvePages(myCacheDir, c.vitepress.userConfig)
       let myPrefix = relative(c.vitepress.srcDir, myCacheDir)

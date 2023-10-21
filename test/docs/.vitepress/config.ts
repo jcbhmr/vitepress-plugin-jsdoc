@@ -11,6 +11,7 @@ export default defineConfig({
         source: {
           includePattern: ".+\\.(c|m)?(j|t)s(doc|x)?$",
         },
+        sourceType: "module",
         plugins: ["jsdoc-plugin-typescript"],
         typescript: {
           moduleRoot: ".."
