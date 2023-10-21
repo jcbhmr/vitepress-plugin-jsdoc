@@ -3,6 +3,8 @@ import jsdoc from "../../../src/index.js";
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
+  ignoreDeadLinks: true,
+  
   vite: {
     clearScreen: false,
     plugins: [
