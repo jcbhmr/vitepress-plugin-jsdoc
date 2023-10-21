@@ -1,5 +1,5 @@
 <script setup>
-import { data } from "./jsdoc.data.js"
+import jsdoc from ".vitepress/jsdoc"
 </script>
 
-<pre>{{ data }}</pre>
+<pre>{{ jsdoc }}</pre>

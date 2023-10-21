@@ -1,18 +1,19 @@
-import { renderSync } from "jsdoc-api"
+import $jsdoc from "./jsdoc.js"
 import { glob } from "glob"
-import {Plugin, ResolvedConfig} from "vite"
+import {Alias, Plugin, ResolvedConfig} from "vite"
 import { fileURLToPath } from "node:url"
 import {SiteConfig, resolvePages} from "vitepress"
 import { UserConfig } from "vite"
 import { basename, dirname, join, relative, resolve, sep } from "node:path"
 import { createRequire } from "node:module"
-import { cp, mkdir, stat } from "node:fs/promises"
+import { cp, mkdir, stat, writeFile } from "node:fs/promises"
 import resolveRewrites from "./resolveRewrites.js"
 import { existsSync } from "node:fs"
 
 interface JSDocOptions {
   files: string | URL | (string | URL)[]
   prefix?: string
+  conf?: object
 }
 
 async function normalizeFiles(files: string | URL | (string | URL)[]): Promise<string[]> {
@@ -29,7 +30,6 @@ async function normalizeFiles(files: string | URL | (string | URL)[]): Promise<s
 }
 
 function jsdoc(options: JSDocOptions): Plugin {
-  let config: ResolvedConfig & { vitepress: SiteConfig }
   let files: string[]
   let myCacheDir: string
   let prefix = options.prefix ?? "api/"
@@ -50,17 +50,18 @@ function jsdoc(options: JSDocOptions): Plugin {
       await mkdir(myCacheDir, { recursive: true })
       await cp(srcPagesDir, myCacheDir, { recursive: true })
 
-      // TODO: Make this fail on errors. Right now it swallows output & errors.
-      renderSync({
-        files,
+      await writeFile(join(myCacheDir, "conf.json"), JSON.stringify(options.conf || {}))
+      await $jsdoc(files, {
+        cwd: c.root,
+        configure: join(myCacheDir, "conf.json"),
         destination: join(myCacheDir, "doc.json"),
         template: dirname(createRequire(import.meta.url).resolve("jsdoc-json/publish.js"))
-      })
+      });
+      (c.resolve.alias as Alias[]).push({ find: ".vitepress/jsdoc", replacement: join(myCacheDir, "doc.json") })
 
       const myConfig = await resolvePages(myCacheDir, c.vitepress.userConfig)
       let myPrefix = relative(c.vitepress.srcDir, myCacheDir)
       myPrefix = myPrefix.replaceAll(sep, "/") + "/"
-      console.debug(myPrefix)
 
       for (const [i, x] of myConfig.pages.entries()) {
         myConfig.pages[i] = myPrefix + x
@@ -84,23 +85,10 @@ function jsdoc(options: JSDocOptions): Plugin {
       Object.assign(c.vitepress.rewrites.map, myConfig.rewrites.map)
       Object.assign(c.vitepress.rewrites.inv, myConfig.rewrites.inv)
 
-      console.debug(c.vitepress.pages)
-      // console.debug(c.vitepress.dynamicRoutes)
-      console.debug(c.vitepress.rewrites)
-
       const myRewrites = resolveRewrites(c.vitepress.pages, {[myPrefix + ":path"]: prefix + ":path" })
-      console.debug({[myPrefix + ":path"]: prefix + ":path" }, myRewrites)
 
       Object.assign(c.vitepress.rewrites.map, myRewrites.map)
       Object.assign(c.vitepress.rewrites.inv, myRewrites.inv)
-
-      // console.debug(c.vitepress.pages)
-      // console.debug(c.vitepress.dynamicRoutes)
-      console.debug(c.vitepress.rewrites)
-    },
-    async configResolved(c: ResolvedConfig & { vitepress: SiteConfig }) {
-      config = c;
-      // console.debug(config)
     },
     async buildStart(options) {
       for (const f of files) {

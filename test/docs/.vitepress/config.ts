@@ -5,7 +5,18 @@ import jsdoc from "../../../src/index.js"
 export default defineConfig({
   vite: {
     clearScreen: false,
-    plugins: [jsdoc({ files: new URL("../../", import.meta.url) })]
+    plugins: [jsdoc({
+      files: new URL("../../", import.meta.url),
+      conf: {
+        source: {
+          includePattern: ".+\\.(c|m)?(j|t)s(doc|x)?$",
+        },
+        plugins: ["jsdoc-plugin-typescript"],
+        typescript: {
+          moduleRoot: ".."
+        }
+      }
+    })]
   },
 
   title: "My Awesome Project",
