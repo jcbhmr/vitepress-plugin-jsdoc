@@ -42,103 +42,132 @@ npm install -D vitepress-plugin-jsdoc
 
 ```js
 // .vitepress/config.ts
-import { defineConfig } from 'vitepress'
-import jsdoc from "vitepress-plugin-jsdoc"
+import { defineConfig } from "vitepress";
+import jsdoc from "vitepress-plugin-jsdoc";
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   vite: {
-    plugins: [jsdoc()]
+    plugins: [jsdoc()],
   },
 
   // ...
-})
+});
 ```
 
 [![](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/jcbhmr/vitepress-plugin-jsdoc)
 
 ### Options
 
-You can specify configuration options via `jsdoc(options)` where `options` is an object with these properties. They are all **optional** so you can just use `jsdoc()` if you like the defaults.
+You can specify configuration options via `jsdoc(options)` where `options` is an
+object with these properties. They are all **optional** so you can just use
+`jsdoc()` if you like the defaults.
 
-- **`include`:** List (or single item) of glob strings (ex: `src/**.js`) or `file:` URL objects (ex: `new URL("./", import.meta.url)`). These files will be passed to the `jsdoc` CLI to generate the output JSON which will then be used to generate the documentation pages. Defaults to `./**`. Note that this is **different** from `conf.source.includePattern`.
+- **`include`:** List (or single item) of glob strings (ex: `src/**.js`). These files will
+  be passed to the `jsdoc` CLI to generate the output JSON which will then be
+  used to generate the documentation pages. Defaults to `./**`. Note that this
+  is **different** from `conf.source.includePattern`.
 
-- **`exclude`:** List (or single item) of glob strings (ex: `docs/**`) or `file:` URL objects (ex: `new URL("./", import.meta.url)`) to **exclude** from the `include` list before passing to the `jsdoc` CLI. By default it is set to `test/**`. Note that this is **different** from `conf.source.excludePattern`. The VitePress root folder, `node_modules`, `.cache`, and `.srcDir` will always be excluded.
+- **`exclude`:** List (or single item) of glob strings (ex: `docs/**`) to **exclude** from
+  the `include` list before passing to the `jsdoc` CLI. By default it is set to
+  `test/**`. Note that this is **different** from `conf.source.excludePattern`.
+  The VitePress root folder, `node_modules`, `.cache`, and the VitePress root will always
+  be excluded.
 
-- **`base`:** Base URL (relative to the site's existing `base` URL) like `/api/` or `/jsdoc/`. Slashes are auto-normalized; `api`, `/api`, `api/`, and `/api/` all mean the same thing. This is the prefix that will be used to serve the API docs under. By default this is `/api/`.
+- **`base`:** Base URL (relative to the site's existing `base` URL) like `/api/`
+  or `/jsdoc/`. Slashes are auto-normalized; `api`, `/api`, `api/`, and `/api/`
+  all mean the same thing. This is the prefix that will be used to serve the API
+  docs under. By default this is `/api/`.
 
-- **`conf`:** JSDoc `conf.json` file path (string or `file:` URL) or a JSON-serializable object to write as `conf.json` and pass to the `jsdoc` CLI. Can also be `null` or `undefined` in which case no `--configure` flag will be passed to `jsdoc`. Defaults to `undefined`. **You will need to specify this option if you are using JSDoc plugins.**
+- **`conf`:** JSDoc `conf.json` file path (string or `file:` URL) or a
+  JSON-serializable object to write as `conf.json` and pass to the `jsdoc` CLI.
+  Can also be `null` or `undefined` in which case no `--configure` flag will be
+  passed to `jsdoc`. Defaults to `undefined`. **You will need to specify this
+  option if you are using JSDoc plugins.**
 
-- **`sidebar`:** A boolean; `true` by default. Set this to `false` to disable injecting a `sidebar` config for the `/api/*` routes.
+<!-- - **`sidebar`:** A boolean; `true` by default. Set this to `false` to disable
+  injecting a `sidebar` config for the `/api/*` routes. -->
 
-Here's an example of using this plugin with [jsdoc-plugin-typescript] to document TypeScript files in `src/`:
+<!-- Here's an example of using this plugin with [jsdoc-plugin-typescript] to
+document TypeScript files in `src/`:
 
 ```js
 // .vitepress/config.ts
-import { defineConfig } from 'vitepress'
-import jsdoc from "vitepress-plugin-jsdoc"
+import { defineConfig } from "vitepress";
+import jsdoc from "vitepress-plugin-jsdoc";
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   vite: {
-    plugins: [jsdoc({
-      include: "src",
-      conf: {
-        source: {
-          includePattern: ".+\\.(c|m)?(j|t)s(doc|x)?$",
+    plugins: [
+      jsdoc({
+        include: "src/**",
+        conf: {
+          source: {
+            includePattern: ".+\\.(c|m)?(j|t)s(doc|x)?$",
+          },
+          sourceType: "module",
+          plugins: ["jsdoc-plugin-typescript"],
+          typescript: {
+            moduleRoot: ".",
+          },
         },
-        sourceType: "module",
-        plugins: ["jsdoc-plugin-typescript"],
-        typescript: {
-          moduleRoot: "."
-        }
-      }
-    })]
+      }),
+    ],
   },
 
   // ...
-})
+});
 ```
 
-[![](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/jcbhmr/vitepress-plugin-jsdoc)
+[![](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/jcbhmr/vitepress-plugin-jsdoc) -->
 
-### Customization
+<!-- ### Customization
 
-Beyond the options, you can override the `<VPJSD*>` components if you want to tweak something:
+Beyond the options, you can override the `<VPJSD*>` components if you want to
+tweak something:
 
 ```js
 // .vitepress/theme/index.ts
 // https://vitepress.dev/guide/custom-theme
-import { h } from 'vue'
-import Theme from 'vitepress/theme'
-import './style.css'
+import { h } from "vue";
+import Theme from "vitepress/theme";
+import "./style.css";
 
 export default {
   extends: Theme,
   Layout: () => {
     return h(Theme.Layout, null, {
       // https://vitepress.dev/guide/extending-default-theme#layout-slots
-    })
+    });
   },
   enhanceApp({ app, router, siteData }) {
     // ...
-    app.component("VPJSDIndex", MyComponent1)
-    app.component("VPJSDParamList", MyComponent2)
-  }
-}
+    app.component("VPJSDIndex", MyComponent1);
+    app.component("VPJSDParamList", MyComponent2);
+  },
+};
 ```
 
-[![](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/jcbhmr/vitepress-plugin-jsdoc)
+[![](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/jcbhmr/vitepress-plugin-jsdoc) -->
 
 ## How it works
 
-1. We copy our internal `pages/` folder (part of this package) to the `.cache/jsdoc/` folder in the VitePress source tree. We can't use `.vitepress/cache/*` because it's excluded from the page indexing step and/or it might not be in the `.srcDir` which is where pages are indexed from.
-2. `jsdoc` is run to generate a `doc.json` with all the data in it. We are using [jsdoc-json] to do this.
+1. We copy our internal `pages/` folder (part of this package) to the
+   `.cache/jsdoc/` folder in the VitePress source tree. We can't use
+   `.vitepress/cache/*` because it's excluded from the page indexing step and/or
+   it might not be in the `.srcDir` which is where pages are indexed from.
+2. `jsdoc` is run to generate a `doc.json` with all the data in it. We are using
+   [jsdoc-json] to do this.
 3. We use Vite's `configure()` hook to:
-    1. Rewrite all `/api/:path` routes to our `.gitignore`-ed `.cache/jsdoc/:path` pages
-    2. Create an import rewrite for `@doc.json` to the `.cache/jsdoc/doc.json` JSDoc JSON output
-    3. Create an import rewrite to wrap the `vitepress/theme` with our additional `.enhanceApp()` custom `<VPJSD*>` components
-    4. Inject a `sidebar` configuration for the `/api/*` routes to use that outlines all pages
+   1. Rewrite all `/api/:path` routes to our `.gitignore`-ed
+      `.cache/jsdoc/:path` pages
+   2. Create an import rewrite for `@doc.json` to the `.cache/jsdoc/doc.json`
+      JSDoc JSON output
+   3. Create an import rewrite to wrap the `vitepress/theme` with our additional
+      `.enhanceApp()` custom `<VPJSD*>` components
+   <!-- 4. Inject a `sidebar` configuration for the `/api/*` routes to use that
+      outlines all pages -->
 4. We use the `doc.json` to populate those routes with content
 
 ## Development
@@ -149,4 +178,5 @@ export default {
 [![](https://developer.stackblitz.com/img/open_in_codeflow.svg)](https://pr.new/https://github.com/jcbhmr/vitepress-plugin-jsdoc)
 
 [jsdoc-json]: https://github.com/tschaub/jsdoc-json#readme
-[jsdoc-plugin-typescript]: https://github.com/openlayers/jsdoc-plugin-typescript#readme
+[jsdoc-plugin-typescript]:
+  https://github.com/openlayers/jsdoc-plugin-typescript#readme

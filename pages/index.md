@@ -1,7 +1,11 @@
 <script setup>
-import jsdoc from ".vitepress/jsdoc"
+import jsdoc from "./doc.json"
 </script>
 
 <ul>
-  <li v-for="x in jsdoc.docs"><a :href="x.longname + '.html'">{{ x.name }}</a></li>
+  <template v-for="x in jsdoc.docs">
+    <li v-if="x.name === x.longname">
+      <a :href="x.longname.replaceAll('#', '.') + '.html'">{{ x.name }}</a>
+    </li>
+  </template>
 </ul>
