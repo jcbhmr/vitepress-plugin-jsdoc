@@ -3,5 +3,10 @@
     "scripts": {
         "docs:dev": "vitepress dev docs",
         "build:docs": "vitepress build docs"
+    },
+    "devDependencies": {
+        "typescript": "^5.2.2",
+        "vitepress": "^1.0.0-rc.22",
+        "vitepress-plugin-jsdoc": "file:.."
     }
 }

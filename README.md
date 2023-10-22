@@ -1,3 +1,5 @@
+![](https://i.imgur.com/LEP2R3N.png)
+
 # JSDoc plugin for VitePress
 
 🧙‍♂️ Automagic JSDoc integration for your VitePress site
@@ -10,11 +12,12 @@
   <a href="https://stackblitz.com/github/jcbhmr/vitepress-plugin-jsdoc"><img valign=middle src="https://developer.stackblitz.com/img/open_in_stackblitz_small.svg"></a>
 </p>
 
-🤩 Works great with [jsdoc-plugin-typescript] \
-👨‍🏭 Comes with premade `js` and `ts` presets \
-🌐 Adds a bunch of `/api/*` pages to your VitePress site
+🌐 Adds `/api/*` pages to your VitePress site \
+🧰 Provides a toolkit for you to customize
 
-<details><summary><b>👀 Screenshots</b></summary>
+🟦 Using TypeScript? You might be interested in [vitepress-plugin-typedoc].
+
+<details><summary><b>📸 Screenshots</b></summary>
 <br>
 <div align=center>
   <img src="https://picsum.photos/550/400">
@@ -63,15 +66,10 @@ You can specify configuration options via `jsdoc(options)` where `options` is an
 object with these properties. They are all **optional** so you can just use
 `jsdoc()` if you like the defaults.
 
-- **`include`:** List (or single item) of glob strings (ex: `src/**.js`). These files will
+- **`files`:** List (or single item) of glob strings (ex: `src/**.js`). These files will
   be passed to the `jsdoc` CLI to generate the output JSON which will then be
-  used to generate the documentation pages. Defaults to `./**`. Note that this
-  is **different** from `conf.source.includePattern`.
-
-- **`exclude`:** List (or single item) of glob strings (ex: `docs/**`) to **exclude** from
-  the `include` list before passing to the `jsdoc` CLI. By default it is set to
-  `test/**`. Note that this is **different** from `conf.source.excludePattern`.
-  The VitePress root folder, `node_modules`, `.cache`, and the VitePress root will always
+  used to generate the documentation pages. Defaults to `./`. Note that this
+  is **different** from `conf.source.includePattern`. The VitePress root folder (your docs) and `node_modules` will always
   be excluded.
 
 - **`base`:** Base URL (relative to the site's existing `base` URL) like `/api/`

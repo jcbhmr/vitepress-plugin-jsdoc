@@ -15,15 +15,10 @@
   ],
   "license": "MIT",
   "type": "module",
-  "exports": "./dist/index.js",
-  "files": [
-    "dist"
-  ],
+  "exports": "./index.js",
   "scripts": {
     "dev": "npm run -w ./test docs:dev",
     "test": "npm run -w ./test build:docs",
-    "lint": "tsc --noEmit",
-    "build": "tsc",
     "format": "prettier -w ."
   },
   "prettier": {

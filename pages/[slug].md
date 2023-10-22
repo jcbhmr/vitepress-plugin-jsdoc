@@ -1,5 +1,5 @@
 <script setup>
-import jsdoc from "./doc.json"
+import jsdoc from "vitepress-plugin-jsdoc/doc.json"
 </script>
 
 # {{ $params.longname }} <Badge type="info" :text="$params.kind" />
