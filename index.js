@@ -40,10 +40,10 @@ import.meta.resolve ??= (x) => {
  * @property {boolean} [sidebar]
  */
 /**
- * @param {JSDocOptions | string|(JSDocConfJSON & Record<string, any>)} [options]
- * @returns {import('vitepress').Plugin[]}
+ * @param {JSDocOptions | JSDocOptions["conf"]} [options]
+ * @returns {import('vite').PluginOption}
  */
-export default function jsdoc(options = undefined) {
+export default async function jsdoc(options = undefined) {
     // console.debug("process.cwd()", process.cwd())
     /** @type {string|(JSDocConfJSON & Record<string, any>) | undefined} */
     let conf
@@ -79,49 +79,70 @@ export default function jsdoc(options = undefined) {
     let confFile
     /** @type {string} */
     let docFile
+    /** @type {string} */
+    let configVitepressCacheDir
     /** @type {import('vite').ResolvedConfig & { vitepress: import('vitepress').SiteConfig }} */
     let config
-    return [{
-        name: "vitepress-plugin-jsdoc-1",
-        /** @param {import('vite').UserConfig & { vitepress: import('vitepress').SiteConfig }} */
-        async config(c) {
-            // console.debug("c", c)
-            // console.debug("c.resolve.alias", c.resolve?.alias)
-            c.resolve.preserveSymlinks = true
-            /** @type {{ find: RegExp, replacement: string }} */
-            const alias = c.resolve.alias.find(x => x.find instanceof RegExp && x.find.toString() === /^vitepress\/theme$/.toString())
-            c.resolve.alias.push({
-                find: "vitepress-plugin-jsdoc/vitepress/theme",
-                replacement: alias.replacement,
-            })
-            c.resolve.alias.push({
-                find: "vitepress-plugin-jsdoc/doc.json",
-                customResolver() {
-                    console.assert(docFile, "docFile not set")
-                    return docFile
-                }
-            })
-        },
-    },
-    {
-        name: "vitpress-plugin-jsdoc-2",
-        enforce: "pre",
-        /** @param {import('vite').ResolvedConfig & { vitepress: import('vitepress').SiteConfig }} */
-        async configResolved(c) {
-            config = c;
-            // console.debug("config", config)
-            // console.debug("config.vitepress", config.vitepress)
-            cacheDir = join(c.vitepress.cacheDir, "vitepress-plugin-jsdoc")
-            await mkdir(cacheDir, {recursive: true})
-            if (!confFile) {
-                confFile = join(cacheDir, "conf.json")
-                await writeFile(confFile, JSON.stringify(conf))
-            }
-            console.debug("readFile(confFile)", await readFile(confFile, "utf8"))
-            docFile = join(cacheDir, "doc.json")
-            await $({ stdio: "inherit" })`jsdoc -c ${confFile} ${recurse ? ["-r"] : []} -t ${dirname(createRequire(import.meta.url).resolve("jsdoc-json/publish.js"))} -d ${docFile}`
-            console.assert(existsSync(docFile), "docFile exists")
-            // console.debug("readFile(docFile)", await readFile(docFile, "utf8"))
-        },
-    }]
+    console.log(process.argv)
+    console.log(await import(function getCallerFile(position) {
+        if (position === void 0) { position = 2; }
+        if (position >= Error.stackTraceLimit) {
+            throw new TypeError('getCallerFile(position) requires position be less then Error.stackTraceLimit but position was: `' + position + '` and Error.stackTraceLimit was: `' + Error.stackTraceLimit + '`');
+        }
+        var oldPrepareStackTrace = Error.prepareStackTrace;
+        Error.prepareStackTrace = function (_, stack) { return stack; };
+        var stack = new Error().stack;
+        Error.prepareStackTrace = oldPrepareStackTrace;
+        if (stack !== null && typeof stack === 'object') {
+            // stack[0] holds this file
+            // stack[1] holds where this function was called
+            // stack[2] holds the file we're interested in
+            return stack[position] ? stack[position].getFileName() : undefined;
+        }
+    }()))
+    // return [{
+    //     name: "vitepress-plugin-jsdoc-1",
+    //     enforce: "pre",
+    //     /** @param {import('vite').UserConfig & { vitepress: import('vitepress').SiteConfig }} config */
+    //     async config(config) {
+    //         // console.debug("c", c)
+    //         // console.debug("c.resolve.alias", c.resolve?.alias)
+    //         config.resolve.preserveSymlinks ??= true
+    //         configVitepressCacheDir = config.vitepress.cacheDir
+    //         cacheDir = join(config.vitepress.cacheDir, "vitepress-plugin-jsdoc")
+    //         await mkdir(cacheDir, { recursive: true })
+    //         if (typeof conf === "string") {
+    //             confFile = conf
+    //         } else {
+    //             confFile = join(cacheDir, "conf.json")
+    //             await writeFile(confFile, JSON.stringify(conf))
+    //         }
+    //         docFile = join(cacheDir, "doc.json")
+    //         await $({ stdio: "inherit" })`jsdoc -c ${confFile} ${recurse ? ["-r"] : []} -t ${dirname(createRequire(import.meta.url).resolve("jsdoc-json/publish.js"))} -d ${docFile}`
+    //         console.assert(existsSync(docFile), "docFile does not exist")
+    //         // console.debug("readFile(docFile)", await readFile(docFile, "utf8"))
+    //         config.resolve.alias.push({
+    //             find: "~vitepress-plugin-jsdoc/doc.json",
+    //             replacement: docFile
+    //         })
+    //     },
+    // },
+    // {
+    //     name: "vitepress-plugin-jsdoc-2",
+    //     /** @param {import('vite').UserConfig & { vitepress: import('vitepress').SiteConfig }} config */
+    //     config(config) {
+    //         /** @type {{ find: RegExp, replacement: string }} */
+    //         const alias = config.resolve.alias.find(x => x.find instanceof RegExp && x.find.toString() === /^vitepress\/theme$/.toString())
+    //         config.resolve.alias.push({
+    //             find: "~vitepress-plugin-jsdoc/vitepress/theme",
+    //             replacement: alias.replacement,
+    //         })
+    //     },
+    //     /** @param {import('vite').ResolvedConfig & { vitepress: import('vitepress').SiteConfig }} config */
+    //     async configResolved(c) {
+    //         config = c
+    //         // console.debug(config)
+    //         console.assert(config.vitepress.cacheDir === configVitepressCacheDir, "cacheDir changed")
+    //     }
+    // }]
 }
